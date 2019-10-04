@@ -543,13 +543,14 @@ class IbApi(EWrapper):
         super(IbApi, self).managedAccounts(accountsList)
         """
         for All accounts
+        Subscribing to an account's information. Only one at a time!
         """
         accountsArray = accountsList.split(",")
         for account_code in accountsArray:
             if account_code.strip() == '':
                 self.client.reqAccountUpdates(True, "All")
             else:
-                self.client.reqAccountUpdates(True, account_code)
+                self.client.reqAccountUpdates(False, account_code)
 
     def historicalData(self, reqId: int, ib_bar: IbBarData):
         """
