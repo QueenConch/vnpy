@@ -130,7 +130,7 @@ class IbGateway(BaseGateway):
 
     default_setting = {
         "TWS地址": "127.0.0.1",
-        "TWS端口": 7497,
+        "TWS端口": 4001,
         "客户号": 1
     }
 
@@ -541,9 +541,15 @@ class IbApi(EWrapper):
         Callback of all sub accountid.
         """
         super(IbApi, self).managedAccounts(accountsList)
-
-        for account_code in accountsList.split(","):
-            self.client.reqAccountUpdates(True, account_code)
+        """
+        for All accounts
+        """
+        accountsArray = accountsList.split(",")
+        for account_code in accountsArray:
+            if account_code.strip() == '':
+                self.client.reqAccountUpdates(True, "All")
+            else:
+                self.client.reqAccountUpdates(True, account_code)
 
     def historicalData(self, reqId: int, ib_bar: IbBarData):
         """
