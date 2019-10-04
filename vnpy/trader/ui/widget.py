@@ -586,7 +586,7 @@ class TradingWidget(QtWidgets.QWidget):
 
     def init_ui(self):
         """"""
-        self.setFixedWidth(300)
+        self.setMinimumWidth(300)
 
         # Trading function area
         exchanges = self.main_engine.get_all_exchanges()
@@ -629,14 +629,23 @@ class TradingWidget(QtWidgets.QWidget):
         cancel_button.clicked.connect(self.cancel_all)
 
         form1 = QtWidgets.QFormLayout()
+        self.exchange_combo.setMinimumWidth(200)
         form1.addRow("交易所", self.exchange_combo)
+        self.symbol_line.setMinimumWidth(200)
         form1.addRow("代码", self.symbol_line)
+        self.name_line.setMinimumWidth(200)
         form1.addRow("名称", self.name_line)
+        self.direction_combo.setMinimumWidth(200)
         form1.addRow("方向", self.direction_combo)
+        self.offset_combo.setMinimumWidth(200)
         form1.addRow("开平", self.offset_combo)
+        self.order_type_combo.setMinimumWidth(200)
         form1.addRow("类型", self.order_type_combo)
+        self.price_line.setMinimumWidth(200)
         form1.addRow("价格", self.price_line)
+        self.volume_line.setMinimumWidth(200)
         form1.addRow("数量", self.volume_line)
+        self.gateway_combo.setMinimumWidth(200)
         form1.addRow("接口", self.gateway_combo)
         form1.addRow(send_button)
         form1.addRow(cancel_button)
