@@ -25,8 +25,8 @@ from ..utility import load_json, save_json
 from ..setting import SETTING_FILENAME, SETTINGS
 
 
-COLOR_LONG = QtGui.QColor("red")
-COLOR_SHORT = QtGui.QColor("green")
+COLOR_LONG = QtGui.QColor("green")
+COLOR_SHORT = QtGui.QColor("red")
 COLOR_BID = QtGui.QColor(255, 174, 201)
 COLOR_ASK = QtGui.QColor(160, 255, 160)
 COLOR_BLACK = QtGui.QColor("black")
@@ -120,6 +120,26 @@ class AskCell(BaseCell):
         self.setForeground(COLOR_BLACK)
         self.setForeground(COLOR_ASK)
 
+class PositionCell(BaseCell):
+    """
+    Cell used for showing pnl data.
+    """
+
+    def __init__(self, content: Any, data: Any):
+        """"""
+        super(PositionCell, self).__init__(content, data)
+
+    def set_content(self, content: Any, data: Any):
+        """
+        Cell color is set based on whether pnl is
+        positive or negative.
+        """
+        super(PositionCell, self).set_content(content, data)
+
+        if str(content).startswith("-"):
+            self.setForeground(COLOR_BID)
+        else:
+            self.setForeground(COLOR_ASK)
 
 class PnlCell(BaseCell):
     """
@@ -457,16 +477,30 @@ class PositionMonitor(BaseMonitor):
     sorting = True
 
     headers = {
-        "symbol": {"display": "代码", "cell": BaseCell, "update": False},
-        "exchange": {"display": "交易所", "cell": EnumCell, "update": False},
-        "direction": {"display": "方向", "cell": DirectionCell, "update": False},
-        "volume": {"display": "数量", "cell": BaseCell, "update": True},
-        "yd_volume": {"display": "昨仓", "cell": BaseCell, "update": True},
-        "frozen": {"display": "冻结", "cell": BaseCell, "update": True},
-        "price": {"display": "均价", "cell": BaseCell, "update": False},
-        "pnl": {"display": "盈亏", "cell": PnlCell, "update": True},
-        "gateway_name": {"display": "接口", "cell": BaseCell, "update": False},
+        "contract_con_id": {"display": "合约ID", "cell": BaseCell, "update": False},
+        "contract_symbol": {"display": "合约代码", "cell": BaseCell, "update": False},
+        "contract_exchange": {"display": "交易所", "cell": BaseCell, "update": False},
+        "contract_primary_exchange": {"display": "主交交易所", "cell": BaseCell, "update": False},
+        "position": {"display": "头寸", "cell": PositionCell, "update": True},
+        "market_price": {"display": "市场价", "cell": BaseCell, "update": True},
+        "market_value": {"display": "市值", "cell": BaseCell, "update": True},
+        "average_cost": {"display": "成本价", "cell": BaseCell, "update": True},
+        "unrealized_pnl": {"display": "实现盈亏", "cell": PnlCell, "update": True},
+        "realized_pnl": {"display": "未实现盈亏", "cell": PnlCell, "update": True},
+        "account_name": {"display": "子账号", "cell": BaseCell, "update": False},
     }
+
+    # headers = {
+    #     "symbol": {"display": "代码", "cell": BaseCell, "update": False},
+    #     "exchange": {"display": "交易所", "cell": EnumCell, "update": False},
+    #     "direction": {"display": "方向", "cell": DirectionCell, "update": False},
+    #     "volume": {"display": "数量", "cell": BaseCell, "update": True},
+    #     "yd_volume": {"display": "昨仓", "cell": BaseCell, "update": True},
+    #     "frozen": {"display": "冻结", "cell": BaseCell, "update": True},
+    #     "price": {"display": "均价", "cell": BaseCell, "update": False},
+    #     "pnl": {"display": "盈亏", "cell": PnlCell, "update": True},
+    #     "gateway_name": {"display": "接口", "cell": BaseCell, "update": False},
+    # }
 
 
 class AccountMonitor(BaseMonitor):

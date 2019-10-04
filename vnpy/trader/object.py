@@ -178,11 +178,26 @@ class PositionData(BaseData):
     exchange: Exchange
     direction: Direction
 
+    # ib data
+    contract_symbol: str
+    contract_exchange: str
+    contract_primary_exchange: str
+
     volume: float = 0
     frozen: float = 0
     price: float = 0
     pnl: float = 0
     yd_volume: float = 0
+
+    # ib data
+    contract_con_id: int = 0
+    position: float = 0
+    market_price: float = 0
+    market_value: float = 0
+    average_cost: float = 0
+    unrealized_pnl: float = 0
+    realized_pnl: float = 0
+    account_name: str = 0
 
     def __post_init__(self):
         """"""

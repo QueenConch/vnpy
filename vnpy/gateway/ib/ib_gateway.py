@@ -464,18 +464,36 @@ class IbApi(EWrapper):
         if not ib_size:
             ib_size = 1
         price = averageCost / ib_size
-        symbol = contract.symbol
-        if contract.primaryExchange != '':
-            symbol = contract.primaryExchange + ':' + contract.symbol
         pos = PositionData(
-            symbol=symbol,
-            exchange=exchange,
-            direction=Direction.NET,
-            volume=position,
-            price=price,
-            pnl=unrealizedPNL,
-            gateway_name=self.gateway_name,
+            contract_con_id = contract.conId,
+            contract_symbol = contract.symbol,
+            contract_exchange = contract.exchange,
+            contract_primary_exchange = contract.primaryExchange,
+            position = position,
+            market_price = marketPrice,
+            market_value = marketValue,
+            average_cost = averageCost,
+            unrealized_pnl = unrealizedPNL,
+            realized_pnl = realizedPNL,
+            account_name = accountName,
+            # old
+            gateway_name = self.gateway_name,
+            symbol = contract.conId,
+            exchange = exchange,
+            direction = Direction.NET,
         )
+        # symbol = contract.symbol
+        # if contract.primaryExchange != '':
+        #     symbol = contract.primaryExchange + ':' + contract.symbol
+        # pos = PositionData(
+        #     symbol=symbol,
+        #     exchange=exchange,
+        #     direction=Direction.NET,
+        #     volume=position,
+        #     price=price,
+        #     pnl=unrealizedPNL,
+        #     gateway_name=self.gateway_name,
+        # )
         self.gateway.on_position(pos)
 
     def updateAccountTime(self, timeStamp: str):  # pylint: disable=invalid-name
