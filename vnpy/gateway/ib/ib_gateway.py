@@ -386,6 +386,7 @@ class IbApi(EWrapper):
 
         orderid = str(orderId)
         order = OrderData(
+            subaccount=ib_order.account,
             symbol=ib_contract.conId,
             exchange=EXCHANGE_IB2VT.get(
                 ib_contract.exchange, ib_contract.exchange),
@@ -545,6 +546,7 @@ class IbApi(EWrapper):
 
         # today_date = datetime.now().strftime("%Y%m%d")
         trade = TradeData(
+            subaccount=execution.acctNumber,
             symbol=contract.conId,
             exchange=EXCHANGE_IB2VT.get(contract.exchange, contract.exchange),
             orderid=str(execution.orderId),
@@ -680,6 +682,7 @@ class IbApi(EWrapper):
         ib_contract.exchange = EXCHANGE_VT2IB[req.exchange]
 
         ib_order = Order()
+        ib_order.account = str(req.subaccount)
         ib_order.orderId = self.orderid
         ib_order.clientId = self.clientid
         ib_order.action = DIRECTION_VT2IB[req.direction]

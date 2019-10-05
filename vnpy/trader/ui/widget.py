@@ -421,6 +421,7 @@ class TradeMonitor(BaseMonitor):
         "price": {"display": "价格", "cell": BaseCell, "update": False},
         "volume": {"display": "数量", "cell": BaseCell, "update": False},
         "time": {"display": "时间", "cell": BaseCell, "update": False},
+        "subaccount": {"display": "子账号", "cell": BaseCell, "update": True},
         "gateway_name": {"display": "接口", "cell": BaseCell, "update": False},
     }
 
@@ -446,6 +447,7 @@ class OrderMonitor(BaseMonitor):
         "traded": {"display": "已成交", "cell": BaseCell, "update": True},
         "status": {"display": "状态", "cell": EnumCell, "update": True},
         "time": {"display": "时间", "cell": BaseCell, "update": True},
+        "subaccount": {"display": "子账号", "cell": BaseCell, "update": True},
         "gateway_name": {"display": "接口", "cell": BaseCell, "update": False},
     }
 
@@ -623,6 +625,10 @@ class TradingWidget(QtWidgets.QWidget):
         self.setMinimumWidth(300)
 
         # Trading function area
+        # accounts = ["UXXXXXX", "UYYYYYY"]
+        self.accounts_combo = QtWidgets.QComboBox()
+        # self.accounts_combo.addItems([account for account in accounts])
+
         exchanges = self.main_engine.get_all_exchanges()
         self.exchange_combo = QtWidgets.QComboBox()
         self.exchange_combo.addItems([exchange.value for exchange in exchanges])
@@ -663,6 +669,8 @@ class TradingWidget(QtWidgets.QWidget):
         cancel_button.clicked.connect(self.cancel_all)
 
         form1 = QtWidgets.QFormLayout()
+        self.accounts_combo.setMinimumWidth(200)
+        form1.addRow("子账号", self.accounts_combo)
         self.exchange_combo.setMinimumWidth(200)
         form1.addRow("交易所", self.exchange_combo)
         self.symbol_line.setMinimumWidth(200)
@@ -887,6 +895,7 @@ class TradingWidget(QtWidgets.QWidget):
             price = float(price_text)
 
         req = OrderRequest(
+            subaccount=self.accounts_combo.currentText(),
             symbol=symbol,
             exchange=Exchange(str(self.exchange_combo.currentText())),
             direction=Direction(str(self.direction_combo.currentText())),

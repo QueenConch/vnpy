@@ -105,7 +105,7 @@ class OrderData(BaseData):
     Order data contains information for tracking lastest status
     of a specific order.
     """
-
+    subaccount: str
     symbol: str
     exchange: Exchange
     orderid: str
@@ -150,6 +150,7 @@ class TradeData(BaseData):
     can have several trade fills.
     """
 
+    subaccount: str
     symbol: str
     exchange: Exchange
     orderid: str
@@ -284,7 +285,7 @@ class OrderRequest:
     """
     Request sending to specific gateway for creating a new order.
     """
-
+    subaccount:str
     symbol: str
     exchange: Exchange
     direction: Direction
@@ -302,6 +303,7 @@ class OrderRequest:
         Create order data from request.
         """
         order = OrderData(
+            subaccount=self.subaccount,
             symbol=self.symbol,
             exchange=self.exchange,
             orderid=orderid,

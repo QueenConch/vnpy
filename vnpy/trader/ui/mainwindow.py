@@ -6,7 +6,7 @@ import webbrowser
 from functools import partial
 from importlib import import_module
 from typing import Callable
-
+import pyqtgraph as pg
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 from vnpy.event import EventEngine
