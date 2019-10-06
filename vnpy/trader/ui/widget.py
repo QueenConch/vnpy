@@ -698,54 +698,62 @@ class TradingWidget(QtWidgets.QWidget):
         ask_color = "rgb(160,255,160)"
 
         self.bp1_label = self.create_label(bid_color)
-        self.bp2_label = self.create_label(bid_color)
-        self.bp3_label = self.create_label(bid_color)
-        self.bp4_label = self.create_label(bid_color)
-        self.bp5_label = self.create_label(bid_color)
+        # self.bp2_label = self.create_label(bid_color)
+        # self.bp3_label = self.create_label(bid_color)
+        # self.bp4_label = self.create_label(bid_color)
+        # self.bp5_label = self.create_label(bid_color)
 
         self.bv1_label = self.create_label(
             bid_color, alignment=QtCore.Qt.AlignRight)
-        self.bv2_label = self.create_label(
-            bid_color, alignment=QtCore.Qt.AlignRight)
-        self.bv3_label = self.create_label(
-            bid_color, alignment=QtCore.Qt.AlignRight)
-        self.bv4_label = self.create_label(
-            bid_color, alignment=QtCore.Qt.AlignRight)
-        self.bv5_label = self.create_label(
-            bid_color, alignment=QtCore.Qt.AlignRight)
+        # self.bv2_label = self.create_label(
+        #     bid_color, alignment=QtCore.Qt.AlignRight)
+        # self.bv3_label = self.create_label(
+        #     bid_color, alignment=QtCore.Qt.AlignRight)
+        # self.bv4_label = self.create_label(
+        #     bid_color, alignment=QtCore.Qt.AlignRight)
+        # self.bv5_label = self.create_label(
+        #     bid_color, alignment=QtCore.Qt.AlignRight)
 
         self.ap1_label = self.create_label(ask_color)
-        self.ap2_label = self.create_label(ask_color)
-        self.ap3_label = self.create_label(ask_color)
-        self.ap4_label = self.create_label(ask_color)
-        self.ap5_label = self.create_label(ask_color)
+        # self.ap2_label = self.create_label(ask_color)
+        # self.ap3_label = self.create_label(ask_color)
+        # self.ap4_label = self.create_label(ask_color)
+        # self.ap5_label = self.create_label(ask_color)
 
         self.av1_label = self.create_label(
             ask_color, alignment=QtCore.Qt.AlignRight)
-        self.av2_label = self.create_label(
-            ask_color, alignment=QtCore.Qt.AlignRight)
-        self.av3_label = self.create_label(
-            ask_color, alignment=QtCore.Qt.AlignRight)
-        self.av4_label = self.create_label(
-            ask_color, alignment=QtCore.Qt.AlignRight)
-        self.av5_label = self.create_label(
-            ask_color, alignment=QtCore.Qt.AlignRight)
+        # self.av2_label = self.create_label(
+        #     ask_color, alignment=QtCore.Qt.AlignRight)
+        # self.av3_label = self.create_label(
+        #     ask_color, alignment=QtCore.Qt.AlignRight)
+        # self.av4_label = self.create_label(
+        #     ask_color, alignment=QtCore.Qt.AlignRight)
+        # self.av5_label = self.create_label(
+        #     ask_color, alignment=QtCore.Qt.AlignRight)
 
+        self.lpclose_label = self.create_label()
         self.lp_label = self.create_label()
         self.return_label = self.create_label(alignment=QtCore.Qt.AlignRight)
 
         form2 = QtWidgets.QFormLayout()
-        form2.addRow(self.ap5_label, self.av5_label)
-        form2.addRow(self.ap4_label, self.av4_label)
-        form2.addRow(self.ap3_label, self.av3_label)
-        form2.addRow(self.ap2_label, self.av2_label)
-        form2.addRow(self.ap1_label, self.av1_label)
-        form2.addRow(self.lp_label, self.return_label)
-        form2.addRow(self.bp1_label, self.bv1_label)
-        form2.addRow(self.bp2_label, self.bv2_label)
-        form2.addRow(self.bp3_label, self.bv3_label)
-        form2.addRow(self.bp4_label, self.bv4_label)
-        form2.addRow(self.bp5_label, self.bv5_label)
+        form2.addRow("last price:", self.lp_label)
+        form2.addRow("last pre-close price:", self.lpclose_label)
+        form2.addRow("return:", self.return_label)
+        form2.addRow("ask price:", self.ap1_label)
+        form2.addRow("ask volume", self.av1_label)
+        form2.addRow("bid price:", self.bp1_label)
+        form2.addRow("bid volume", self.bv1_label)
+        # form2.addRow(self.ap5_label, self.av5_label)
+        # form2.addRow(self.ap4_label, self.av4_label)
+        # form2.addRow(self.ap3_label, self.av3_label)
+        # form2.addRow(self.ap2_label, self.av2_label)
+        # form2.addRow(self.ap1_label, self.av1_label)
+        # form2.addRow(self.lp_label, self.return_label)
+        # form2.addRow(self.bp1_label, self.bv1_label)
+        # form2.addRow(self.bp2_label, self.bv2_label)
+        # form2.addRow(self.bp3_label, self.bv3_label)
+        # form2.addRow(self.bp4_label, self.bv4_label)
+        # form2.addRow(self.bp5_label, self.bv5_label)
 
         # Overall layout
         vbox = QtWidgets.QVBoxLayout()
@@ -781,31 +789,32 @@ class TradingWidget(QtWidgets.QWidget):
         self.bv1_label.setText(str(tick.bid_volume_1))
         self.ap1_label.setText(str(tick.ask_price_1))
         self.av1_label.setText(str(tick.ask_volume_1))
+        self.lpclose_label.setText(str(tick.pre_close))
 
         if tick.pre_close:
             r = (tick.last_price / tick.pre_close - 1) * 100
             self.return_label.setText(f"{r:.2f}%")
 
-        if tick.bid_price_2:
-            self.bp2_label.setText(str(tick.bid_price_2))
-            self.bv2_label.setText(str(tick.bid_volume_2))
-            self.ap2_label.setText(str(tick.ask_price_2))
-            self.av2_label.setText(str(tick.ask_volume_2))
-
-            self.bp3_label.setText(str(tick.bid_price_3))
-            self.bv3_label.setText(str(tick.bid_volume_3))
-            self.ap3_label.setText(str(tick.ask_price_3))
-            self.av3_label.setText(str(tick.ask_volume_3))
-
-            self.bp4_label.setText(str(tick.bid_price_4))
-            self.bv4_label.setText(str(tick.bid_volume_4))
-            self.ap4_label.setText(str(tick.ask_price_4))
-            self.av4_label.setText(str(tick.ask_volume_4))
-
-            self.bp5_label.setText(str(tick.bid_price_5))
-            self.bv5_label.setText(str(tick.bid_volume_5))
-            self.ap5_label.setText(str(tick.ask_price_5))
-            self.av5_label.setText(str(tick.ask_volume_5))
+        # if tick.bid_price_2:
+        #     self.bp2_label.setText(str(tick.bid_price_2))
+        #     self.bv2_label.setText(str(tick.bid_volume_2))
+        #     self.ap2_label.setText(str(tick.ask_price_2))
+        #     self.av2_label.setText(str(tick.ask_volume_2))
+        #
+        #     self.bp3_label.setText(str(tick.bid_price_3))
+        #     self.bv3_label.setText(str(tick.bid_volume_3))
+        #     self.ap3_label.setText(str(tick.ask_price_3))
+        #     self.av3_label.setText(str(tick.ask_volume_3))
+        #
+        #     self.bp4_label.setText(str(tick.bid_price_4))
+        #     self.bv4_label.setText(str(tick.bid_volume_4))
+        #     self.ap4_label.setText(str(tick.ask_price_4))
+        #     self.av4_label.setText(str(tick.ask_volume_4))
+        #
+        #     self.bp5_label.setText(str(tick.bid_price_5))
+        #     self.bv5_label.setText(str(tick.bid_volume_5))
+        #     self.ap5_label.setText(str(tick.ask_price_5))
+        #     self.av5_label.setText(str(tick.ask_volume_5))
     def process_account_event(self, event: Event):
         """"""
         account = event.data
@@ -858,30 +867,31 @@ class TradingWidget(QtWidgets.QWidget):
         """
         self.lp_label.setText("")
         self.return_label.setText("")
-
+        self.lpclose_label.setText("")
+        
         self.bv1_label.setText("")
-        self.bv2_label.setText("")
-        self.bv3_label.setText("")
-        self.bv4_label.setText("")
-        self.bv5_label.setText("")
+        # self.bv2_label.setText("")
+        # self.bv3_label.setText("")
+        # self.bv4_label.setText("")
+        # self.bv5_label.setText("")
 
         self.av1_label.setText("")
-        self.av2_label.setText("")
-        self.av3_label.setText("")
-        self.av4_label.setText("")
-        self.av5_label.setText("")
+        # self.av2_label.setText("")
+        # self.av3_label.setText("")
+        # self.av4_label.setText("")
+        # self.av5_label.setText("")
 
         self.bp1_label.setText("")
-        self.bp2_label.setText("")
-        self.bp3_label.setText("")
-        self.bp4_label.setText("")
-        self.bp5_label.setText("")
+        # self.bp2_label.setText("")
+        # self.bp3_label.setText("")
+        # self.bp4_label.setText("")
+        # self.bp5_label.setText("")
 
         self.ap1_label.setText("")
-        self.ap2_label.setText("")
-        self.ap3_label.setText("")
-        self.ap4_label.setText("")
-        self.ap5_label.setText("")
+        # self.ap2_label.setText("")
+        # self.ap3_label.setText("")
+        # self.ap4_label.setText("")
+        # self.ap5_label.setText("")
 
     def send_order(self):
         """
