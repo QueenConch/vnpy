@@ -210,6 +210,7 @@ class IbApi(EWrapper):
         self.clientid = 0
         self.ticks = {}
         self.orders = {}
+        self.account_lists = ""
         self.accounts = {}
         self.contracts = {}
 
@@ -415,7 +416,8 @@ class IbApi(EWrapper):
         accountid = f"{accountName}.{currency}"
         account = self.accounts.get(accountid, None)
         if not account:
-            account = AccountData(accountid=accountid,
+            account = AccountData(account_lists=self.account_lists,
+                                  accountid=accountid,
                                   gateway_name=self.gateway_name)
             self.accounts[accountid] = account
 
@@ -569,6 +571,7 @@ class IbApi(EWrapper):
         for All accounts
         Subscribing to an account's information. Only one at a time!
         """
+        self.account_lists = accountsList
         accountsArray = accountsList.split(",")
         for account_code in accountsArray:
             if account_code.strip() == '':
@@ -640,8 +643,13 @@ class IbApi(EWrapper):
             return
 
         ib_contract = Contract()
-        ib_contract.conId = str(req.symbol)
-        ib_contract.exchange = EXCHANGE_VT2IB[req.exchange]
+        #ib_contract.conId = str(req.symbol)
+        #ib_contract.exchange = EXCHANGE_VT2IB[req.exchange]
+        ib_contract.symbol = str(req.symbol)
+        ib_contract.secType = "STK"
+        ib_contract.currency = "USD"
+        ib_contract.exchange = "SMART"
+        ib_contract.primaryExchange = "ISLAND"
 
         # Get contract data from TWS.
         self.reqid += 1

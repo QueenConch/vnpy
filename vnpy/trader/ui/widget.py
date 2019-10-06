@@ -607,6 +607,7 @@ class TradingWidget(QtWidgets.QWidget):
     """
 
     signal_tick = QtCore.pyqtSignal(Event)
+    signal_account = QtCore.pyqtSignal(Event)
 
     def __init__(self, main_engine: MainEngine, event_engine: EventEngine):
         """"""
@@ -766,6 +767,8 @@ class TradingWidget(QtWidgets.QWidget):
         """"""
         self.signal_tick.connect(self.process_tick_event)
         self.event_engine.register(EVENT_TICK, self.signal_tick.emit)
+        self.signal_account.connect(self.process_account_event)
+        self.event_engine.register(EVENT_ACCOUNT, self.signal_account.emit)
 
     def process_tick_event(self, event: Event):
         """"""
@@ -803,6 +806,13 @@ class TradingWidget(QtWidgets.QWidget):
             self.bv5_label.setText(str(tick.bid_volume_5))
             self.ap5_label.setText(str(tick.ask_price_5))
             self.av5_label.setText(str(tick.ask_volume_5))
+    def process_account_event(self, event: Event):
+        """"""
+        account = event.data
+        account_lists = account.__getattribute__("account_lists")
+        account_array = account_lists.strip(",").split(",")
+        if self.accounts_combo.count() != account_array.__len__():
+            self.accounts_combo.addItems([account for account in account_array])
 
     def set_vt_symbol(self):
         """

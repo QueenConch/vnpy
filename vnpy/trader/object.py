@@ -212,7 +212,7 @@ class AccountData(BaseData):
     Account data contains information about balance, frozen and
     available.
     """
-
+    account_lists: str
     accountid: str
 
     balance: float = 0
