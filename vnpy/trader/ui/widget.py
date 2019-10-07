@@ -18,6 +18,7 @@ from ..event import (
     EVENT_ORDER,
     EVENT_POSITION,
     EVENT_ACCOUNT,
+    EVENT_CONTRACT,
     EVENT_LOG
 )
 from ..object import OrderRequest, SubscribeRequest
@@ -608,6 +609,7 @@ class TradingWidget(QtWidgets.QWidget):
 
     signal_tick = QtCore.pyqtSignal(Event)
     signal_account = QtCore.pyqtSignal(Event)
+    signal_contract = QtCore.pyqtSignal(Event)
 
     def __init__(self, main_engine: MainEngine, event_engine: EventEngine):
         """"""
@@ -623,19 +625,8 @@ class TradingWidget(QtWidgets.QWidget):
 
     def init_ui(self):
         """"""
+        linecombowidth = 200
         self.setMinimumWidth(300)
-
-        # Trading function area
-        # accounts = ["UXXXXXX", "UYYYYYY"]
-        self.accounts_combo = QtWidgets.QComboBox()
-        # self.accounts_combo.addItems([account for account in accounts])
-
-        exchanges = self.main_engine.get_all_exchanges()
-        self.exchange_combo = QtWidgets.QComboBox()
-        self.exchange_combo.addItems([exchange.value for exchange in exchanges])
-
-        self.symbol_line = QtWidgets.QLineEdit()
-        self.symbol_line.returnPressed.connect(self.set_vt_symbol)
 
         self.name_line = QtWidgets.QLineEdit()
         self.name_line.setReadOnly(True)
@@ -670,13 +661,78 @@ class TradingWidget(QtWidgets.QWidget):
         cancel_button.clicked.connect(self.cancel_all)
 
         form1 = QtWidgets.QFormLayout()
-        self.accounts_combo.setMinimumWidth(200)
+        form1.fieldGrowthPolicy()
+        self.accounts_combo = QtWidgets.QComboBox()
+        #self.accounts_combo.setMinimumWidth(linecombowidth)
         form1.addRow("子账号", self.accounts_combo)
+
+        self.symbol_line = QtWidgets.QLineEdit()
+        self.symbol_line.returnPressed.connect(self.set_vt_symbol)
+        self.symbol_line.setMinimumWidth(linecombowidth)
+        form1.addRow("symbol", self.symbol_line)
+
+        self.conId_line = QtWidgets.QLineEdit()
+        self.conId_line.returnPressed.connect(self.set_vt_symbol)
+        self.conId_line.setMinimumWidth(linecombowidth)
+        form1.addRow("conId", self.conId_line)
+
+        secIdType_array = ["", "ISIN"]
+        self.secIdType_combo = QtWidgets.QComboBox()
+        form1.addRow("secIdType", self.secIdType_combo)
+        self.secIdType_combo.setMinimumWidth(linecombowidth)
+        self.secIdType_combo.addItems([secIdType for secIdType in secIdType_array])
+
+        self.secId_line = QtWidgets.QLineEdit()
+        self.secId_line.returnPressed.connect(self.set_vt_symbol)
+        self.secId_line.setMinimumWidth(linecombowidth)
+        form1.addRow("secId", self.secId_line)
+
+        self.secType_combo = QtWidgets.QComboBox()
+        form1.addRow("secType", self.secType_combo)
+        secType_array = ["STK", "BOND", "CASH", "IND", "CFD", "OPT", "FUND", "CMDTY", "IOPT", "FUT", "FOP"]
+        self.secType_combo.setMinimumWidth(linecombowidth)
+        self.secType_combo.addItems([secType for secType in secType_array])
+
+        self.currency_combo = QtWidgets.QComboBox()
+        self.currency_combo.setMinimumWidth(200)
+        self.currency_combo = QtWidgets.QComboBox()
+        form1.addRow("currency", self.currency_combo)
+        currency_array = ["USD", "HKD", "GBP", "EUR"]
+        self.currency_combo.addItems([currency for currency in currency_array])
+
+        self.exchange_combo = QtWidgets.QComboBox()
         self.exchange_combo.setMinimumWidth(200)
-        form1.addRow("交易所", self.exchange_combo)
+        form1.addRow("exchange", self.exchange_combo)
+        exchange_array = ["SMART", "SEHK", "IDEALPRO", "DTB", "ISLAND", "BOX", "SBF", "GLOBEX"]
+        self.exchange_combo.addItems([exchange for exchange in exchange_array])
+
+        self.primaryExchange_combo = QtWidgets.QComboBox()
+        self.primaryExchange_combo.setMinimumWidth(200)
+        form1.addRow("primaryExchange", self.primaryExchange_combo)
+        primaryExchange_array = ["ISLAND", "HEX", ""]
+        self.primaryExchange_combo.addItems([primaryExchange for primaryExchange in primaryExchange_array])
+
+        self.lastTradeDateOrContractMonth_line = QtWidgets.QLineEdit()
+        form1.addRow("lastTradeDateOrContractMonth", self.lastTradeDateOrContractMonth_line)
+
+        self.right_combo = QtWidgets.QComboBox()
+        form1.addRow("right", self.right_combo)
+        right_array = ["", "C", "P"]
+        self.right_combo.addItems([right for right in right_array])
+
+        self.strike_line = QtWidgets.QLineEdit()
+        form1.addRow("strike", self.strike_line)
+
+        self.multiplier_line = QtWidgets.QLineEdit()
+        form1.addRow("multiplier", self.multiplier_line)
+
+        self.tradingClass_line = QtWidgets.QLineEdit()
+        form1.addRow("tradingClass", self.tradingClass_line)
+
+        self.localSymbol_line = QtWidgets.QLineEdit()
+        form1.addRow("localSymbol", self.localSymbol_line)
+
         self.symbol_line.setMinimumWidth(200)
-        form1.addRow("代码", self.symbol_line)
-        self.name_line.setMinimumWidth(200)
         form1.addRow("名称", self.name_line)
         self.direction_combo.setMinimumWidth(200)
         form1.addRow("方向", self.direction_combo)
@@ -688,8 +744,6 @@ class TradingWidget(QtWidgets.QWidget):
         form1.addRow("价格", self.price_line)
         self.volume_line.setMinimumWidth(200)
         form1.addRow("数量", self.volume_line)
-        self.gateway_combo.setMinimumWidth(200)
-        form1.addRow("接口", self.gateway_combo)
         form1.addRow(send_button)
         form1.addRow(cancel_button)
 
@@ -756,7 +810,7 @@ class TradingWidget(QtWidgets.QWidget):
         # form2.addRow(self.bp5_label, self.bv5_label)
 
         # Overall layout
-        vbox = QtWidgets.QVBoxLayout()
+        vbox = QtWidgets.QHBoxLayout()
         vbox.addLayout(form1)
         vbox.addLayout(form2)
         self.setLayout(vbox)
@@ -777,6 +831,24 @@ class TradingWidget(QtWidgets.QWidget):
         self.event_engine.register(EVENT_TICK, self.signal_tick.emit)
         self.signal_account.connect(self.process_account_event)
         self.event_engine.register(EVENT_ACCOUNT, self.signal_account.emit)
+        self.signal_contract.connect(self.process_contract_event)
+        self.event_engine.register(EVENT_CONTRACT, self.signal_contract.emit)
+
+    def process_contract_event(self, event: Event):
+        """"""
+        symbol = str(self.symbol_line.text()).upper()
+        if not symbol:
+            return
+        # Generate vt_symbol from symbol and exchange
+        exchange_value = str(self.exchange_combo.currentText())
+        vt_symbol = f"{symbol}.{exchange_value}"
+
+        # Update name line widget and clear all labels
+        contract = self.main_engine.get_contract(vt_symbol)
+        if not contract:
+            self.name_line.setText("")
+        else:
+            self.name_line.setText(contract.name)
 
     def process_tick_event(self, event: Event):
         """"""
@@ -898,7 +970,10 @@ class TradingWidget(QtWidgets.QWidget):
         Send new order manually.
         """
         symbol = str(self.symbol_line.text())
-        if not symbol:
+        conId = str(self.conId_line.text())
+        secId = str(self.secId_line.text())
+        localSymbol = str(self.localSymbol_line.text())
+        if not symbol or not conId or not secId or not localSymbol:
             QtWidgets.QMessageBox.critical(self, "委托失败", "请输入合约代码")
             return
 
@@ -916,8 +991,21 @@ class TradingWidget(QtWidgets.QWidget):
 
         req = OrderRequest(
             subaccount=self.accounts_combo.currentText(),
-            symbol=symbol,
-            exchange=Exchange(str(self.exchange_combo.currentText())),
+            symbol=self.symbol,
+            conId=self.conId,
+            secIdType=str(self.secIdType_combo.currentText()),
+            secId=self.secId,
+            secType=str(self.secType_combo.currentText()),
+            currency=str(self.currency_combo.currentText()),
+            exchange=str(self.exchange_combo.currentText()),
+            primaryExchange=str(self.primaryExchange_combo.currentText()),
+            lastTradeDateOrContractMonth=str(self.lastTradeDateOrContractMonth_line.text()),
+            right=str(self.right_combo.currentText()),
+            strike=str(self.strike_line.text()),
+            multiplier=str(self.multiplier_line.text()),
+            tradingClass=str(self.tradingClass_line.text()),
+            localSymbol=str(self.localSymbol_line.text()),
+
             direction=Direction(str(self.direction_combo.currentText())),
             type=OrderType(str(self.order_type_combo.currentText())),
             volume=volume,

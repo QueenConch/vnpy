@@ -107,7 +107,20 @@ class OrderData(BaseData):
     """
     subaccount: str
     symbol: str
-    exchange: Exchange
+    conId: str
+    secIdType: str
+    secId: str
+    secType: str
+    currency: str
+    exchange: str
+    primaryExchange: str
+    lastTradeDateOrContractMonth: str
+    right: str
+    strike: str
+    multiplier: str
+    tradingClass: str
+    localSymbol: str
+
     orderid: str
 
     type: OrderType = OrderType.LIMIT
@@ -263,7 +276,7 @@ class ContractData(BaseData):
 
     def __post_init__(self):
         """"""
-        self.vt_symbol = f"{self.symbol}.{self.exchange.value}"
+        self.vt_symbol = f"{self.symbol}.{self.exchange}"
 
 
 @dataclass
@@ -285,9 +298,22 @@ class OrderRequest:
     """
     Request sending to specific gateway for creating a new order.
     """
-    subaccount:str
+    subaccount: str
     symbol: str
-    exchange: Exchange
+    conId: str
+    secIdType: str
+    secId: str
+    secType: str
+    currency: str
+    exchange: str
+    primaryExchange: str
+    lastTradeDateOrContractMonth: str
+    right: str
+    strike: str
+    multiplier: str
+    tradingClass: str
+    localSymbol: str
+
     direction: Direction
     type: OrderType
     volume: float
@@ -305,7 +331,20 @@ class OrderRequest:
         order = OrderData(
             subaccount=self.subaccount,
             symbol=self.symbol,
+            conId=self.conId,
+            secIdType=self.secIdType,
+            secId=self.secId,
+            secType=self.secType,
+            currency=self.currency,
             exchange=self.exchange,
+            primaryExchange=self.primaryExchange,
+            lastTradeDateOrContractMonth=self.lastTradeDateOrContractMonth,
+            right=self.right,
+            strike=self.strike,
+            multiplier=self.multiplier,
+            tradingClass=self.tradingClass,
+            localSymbol=self.localSymbol,
+
             orderid=orderid,
             type=self.type,
             direction=self.direction,

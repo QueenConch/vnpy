@@ -513,7 +513,7 @@ class IbApi(EWrapper):
         """
         super(IbApi, self).contractDetails(reqId, contractDetails)
 
-        ib_symbol = contractDetails.contract.conId
+        ib_symbol = contractDetails.contract.symbol
         ib_exchange = contractDetails.contract.exchange
         ib_size = contractDetails.contract.multiplier
         ib_product = contractDetails.contract.secType
@@ -523,7 +523,7 @@ class IbApi(EWrapper):
 
         contract = ContractData(
             symbol=ib_symbol,
-            exchange=EXCHANGE_IB2VT.get(ib_exchange, ib_exchange),
+            exchange=ib_exchange,
             name=contractDetails.longName,
             product=PRODUCT_IB2VT[ib_product],
             size=ib_size,
@@ -686,8 +686,20 @@ class IbApi(EWrapper):
         self.orderid += 1
 
         ib_contract = Contract()
-        ib_contract.conId = str(req.symbol)
-        ib_contract.exchange = EXCHANGE_VT2IB[req.exchange]
+        ib_contract.symbol = str(req.symbol)
+        ib_contract.conId = str(req.conId)
+        ib_contract.secIdType = str(req.secIdType)
+        ib_contract.secId = str(req.secId)
+        ib_contract.secType = str(req.secType)
+        ib_contract.currency = str(req.currency)
+        ib_contract.exchange = str(req.exchange)
+        ib_contract.primaryExchange = str(req.primaryExchange)
+        ib_contract.lastTradeDateOrContractMonth = str(req.lastTradeDateOrContractMonth)
+        ib_contract.right = str(req.right)
+        ib_contract.strike = str(req.strike)
+        ib_contract.multiplier = str(req.multiplier)
+        ib_contract.tradingClass = str(req.tradingClass)
+        ib_contract.localSymbol = str(req.localSymbol)
 
         ib_order = Order()
         ib_order.account = str(req.subaccount)
